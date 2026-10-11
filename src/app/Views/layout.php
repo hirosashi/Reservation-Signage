@@ -11,7 +11,7 @@ $date = $date ?? \App\Core\Clock::today();
 $flash = Session::pullFlash();
 $nav = [
     ['/', 'ホーム'], ['/chart', 'チャート'], ['/list', 'リスト'], ['/calendar', 'カレンダー'],
-    ['/customers', '顧客検索'], ['/signage', 'サイネージ'],
+    ['/customers', '顧客検索'], ['/screens', 'サイネージ'],
 ];
 $dt = new DateTimeImmutable($date);
 $wd = ['日', '月', '火', '水', '木', '金', '土'][(int)$dt->format('w')];

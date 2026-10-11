@@ -42,6 +42,6 @@ final class SignageController
         Csrf::verify();
         Master::saveSetting('signage_days', (string)max(1, min(31, App::intParam('signage_days', 7))));
         Session::flash('ok', 'サイネージ設定を保存しました。');
-        App::redirect('/signage');
+        App::redirect('/screens');
     }
 }

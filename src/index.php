@@ -52,8 +52,8 @@ $router->get('/customers/{id}', [CustomerController::class, 'show']);
 $router->get('/api/customers', [CustomerController::class, 'api']);
 
 // サイネージ・帳票
-$router->get('/signage', [SignageController::class, 'index']);
-$router->post('/signage/settings', [SignageController::class, 'saveSettings']);
+$router->get('/screens', [SignageController::class, 'index']);
+$router->post('/screens/settings', [SignageController::class, 'saveSettings']);
 $router->get('/api/signage/events', [SignageController::class, 'events']);
 $router->get('/report', [ReportController::class, 'show']);
 $router->get('/report/xlsx', [ReportController::class, 'xlsx']);

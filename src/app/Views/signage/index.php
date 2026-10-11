@@ -7,7 +7,7 @@
     <p class="muted small">表示データ：<a href="<?= App::url('api/signage/events') ?>?date=<?= View::e($date) ?>" target="_blank" rel="noopener"><?= View::e(App::url('api/signage/events')) ?></a>（旧 tablecheck-sync.php と同じ形式）</p>
     <p class="muted small">予約で「サイネージに表示する」をオンにし、仮予約・キャンセル・無断キャンセル以外のステータスで、会場が入っている予約が表示されます。「サイネージ非表示」設定のフラグが付いた予約は出ません。</p>
     <?php if (Auth::isAdmin()): ?>
-    <form method="post" action="<?= App::url('/signage/settings') ?>" class="inline"><?= Csrf::field() ?>
+    <form method="post" action="<?= App::url('/screens/settings') ?>" class="inline"><?= Csrf::field() ?>
       <label>表示データの日数 <input type="number" name="signage_days" min="1" max="31" value="<?= View::e($days) ?>" class="w-qty"></label><button class="btn btn-sm">保存</button></form>
     <?php endif; ?>
   </section>
