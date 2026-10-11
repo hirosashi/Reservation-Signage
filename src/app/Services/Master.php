@@ -45,7 +45,7 @@ final class Master
     public static function venues(bool $activeOnly = true): array
     {
         return self::memo('venues' . (int)$activeOnly, fn () => Db::rows(
-            'SELECT v.*, s.name AS shop_name, s.sort_no AS shop_sort FROM venues v JOIN shops s ON s.id = v.shop_id'
+            'SELECT v.*, s.name AS shop_name, s.sort_no AS shop_sort, s.is_active AS shop_active FROM venues v JOIN shops s ON s.id = v.shop_id'
             . ($activeOnly ? ' WHERE v.is_active = 1 AND s.is_active = 1' : '')
             . ' ORDER BY s.sort_no, s.id, v.sort_no, v.id'
         ));

@@ -20,6 +20,8 @@ final class CustomerController
 {
     private const FIELDS = ['last_name' => '姓', 'first_name' => '名', 'last_kana' => 'セイ', 'first_kana' => 'メイ', 'company' => '会社名', 'department' => '部署', 'title' => '役職', 'tel' => '電話番号', 'email' => 'メール', 'gender' => '性別', 'memo' => '顧客メモ'];
 
+    private const MAX = ['last_name' => 50, 'first_name' => 50, 'last_kana' => 50, 'first_kana' => 50, 'company' => 200, 'department' => 100, 'title' => 100, 'tel' => 30, 'email' => 200, 'gender' => 10, 'memo' => 20000];
+
     public static function index(): void
     {
         Auth::requireLogin();
@@ -76,10 +78,19 @@ final class CustomerController
         $vals = [];
         foreach (array_keys(self::FIELDS) as $f) {
             $v = $f === 'memo' ? (string)($_POST[$f] ?? '') : App::param($f);
-            $vals[$f] = mb_substr($v, 0, $f === 'memo' ? 20000 : 200);
+            $vals[$f] = $v;
         }
+        $errors = [];
         if (trim($vals['last_name'] . $vals['first_name'] . $vals['last_kana'] . $vals['company']) === '') {
-            View::render('customers/edit', ['title' => '顧客', 'c' => $vals + ['id' => $id], 'fields' => self::FIELDS, 'tagIds' => [], 'errors' => ['氏名・カナ・会社名のどれかを入力してください。']]);
+            $errors[] = '氏名・カナ・会社名のどれかを入力してください。';
+        }
+        foreach (self::MAX as $f => $max) {
+            if (mb_strlen($vals[$f]) > $max) {
+                $errors[] = self::FIELDS[$f] . 'は' . $max . '文字以内で入力してください。';
+            }
+        }
+        if ($errors !== []) {
+            View::render('customers/edit', ['title' => '顧客', 'c' => $vals + ['id' => $id], 'fields' => self::FIELDS, 'tagIds' => array_map('intval', (array)($_POST['tag_ids'] ?? [])), 'errors' => $errors]);
             return;
         }
         $now = Clock::nowStr();

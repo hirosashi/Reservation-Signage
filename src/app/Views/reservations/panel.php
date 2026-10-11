@@ -48,9 +48,9 @@ $curShop = null;
   <fieldset><legend>会場・テーブル（複数可）</legend>
     <input type="search" class="venue-filter" placeholder="会場名で絞り込み">
     <div class="venue-picks">
-    <?php foreach (Master::venues() as $v): ?>
+    <?php foreach (array_filter(Master::venues(false), fn ($v) => ((int)$v['is_active'] === 1 && (int)$v['shop_active'] === 1) || in_array((int)$v['id'], $venueIds, true)) as $v): ?>
       <?php if ($curShop !== $v['shop_id']): $curShop = $v['shop_id']; ?><div class="pick-group"><?= View::e($v['shop_name']) ?></div><?php endif; ?>
-      <label class="pick"><input type="checkbox" name="venue_ids[]" value="<?= (int)$v['id'] ?>" <?= in_array((int)$v['id'], $venueIds, true) ? 'checked' : '' ?>><span><?= View::e($v['name']) ?></span></label>
+      <label class="pick"><input type="checkbox" name="venue_ids[]" value="<?= (int)$v['id'] ?>" <?= in_array((int)$v['id'], $venueIds, true) ? 'checked' : '' ?>><span><?= View::e($v['name']) ?><?= (int)$v['is_active'] === 1 && (int)$v['shop_active'] === 1 ? '' : '（停止中）' ?></span></label>
     <?php endforeach; ?>
     </div>
     <label class="check"><input type="checkbox" name="allow_overlap" value="1"> 重複を許可（同じ会場・同じ時間に重ねて保存）</label>
@@ -92,8 +92,8 @@ $curShop = null;
 
   <fieldset><legend>フラグ</legend>
     <div class="flag-picks">
-    <?php foreach (Master::flags() as $f): ?>
-      <label class="flagpick" style="--c: <?= View::e($f['color'] ?: '#888') ?>"><input type="checkbox" name="flag_ids[]" value="<?= (int)$f['id'] ?>" <?= in_array((int)$f['id'], $flagIds, true) ? 'checked' : '' ?>><span><?= View::e($f['name']) ?></span></label>
+    <?php foreach (array_filter(Master::flags(false), fn ($f) => (int)$f['is_active'] === 1 || in_array((int)$f['id'], $flagIds, true)) as $f): ?>
+      <label class="flagpick" style="--c: <?= View::e($f['color'] ?: '#888') ?>"><input type="checkbox" name="flag_ids[]" value="<?= (int)$f['id'] ?>" <?= in_array((int)$f['id'], $flagIds, true) ? 'checked' : '' ?>><span><?= View::e($f['name']) ?><?= (int)$f['is_active'] === 1 ? '' : '（停止中）' ?></span></label>
     <?php endforeach; ?>
     </div>
   </fieldset>

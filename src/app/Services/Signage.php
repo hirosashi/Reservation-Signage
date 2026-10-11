@@ -54,7 +54,7 @@ final class Signage
         }
         $name = trim((string)$r['sign_name']);
         if ($name === '') {
-            $name = Reservations::title($r);
+            $name = trim((string)$r['group_name']);
         }
         $start = self::minutes((string)$r['start_time']);
         $end = self::minutes((string)$r['end_time']);

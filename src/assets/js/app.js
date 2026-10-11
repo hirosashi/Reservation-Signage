@@ -53,7 +53,7 @@
     });
     tr.querySelector(".order-del").addEventListener("click", () => {
       if (tbody.querySelectorAll("tr").length > 1) tr.remove();
-      else tr.querySelectorAll("input").forEach((i) => { i.value = i.type === "number" ? 1 : ""; });
+      else { tr.querySelectorAll("input").forEach((i) => { i.value = i.type === "number" ? 1 : ""; }); tr.querySelector(".order-menu").value = ""; }
       total();
     });
     tr.querySelectorAll("input").forEach((i) => i.addEventListener("input", total));

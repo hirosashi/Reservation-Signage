@@ -82,13 +82,14 @@ final class Db
     public static function tx(callable $fn): mixed
     {
         $pdo = self::conn();
-        $pdo->beginTransaction();
+        $sqlite = self::driver() === 'sqlite';
+        $sqlite ? $pdo->exec('BEGIN IMMEDIATE') : $pdo->beginTransaction();
         try {
             $r = $fn();
-            $pdo->commit();
+            $sqlite ? $pdo->exec('COMMIT') : $pdo->commit();
             return $r;
         } catch (\Throwable $e) {
-            $pdo->rollBack();
+            $sqlite ? $pdo->exec('ROLLBACK') : $pdo->rollBack();
             throw $e;
         }
     }

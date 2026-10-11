@@ -82,9 +82,12 @@ final class Reservations
      * @param array<int, int> $flagIds
      * @param array<int, array{menu_item_id: ?int, name: string, unit_price: int, qty: int}> $orders
      */
-    public static function save(?int $id, array $data, array $venueIds, array $flagIds, array $orders): int
+    public static function save(?int $id, array $data, array $venueIds, array $flagIds, array $orders, bool $allowOverlap = true): int
     {
-        return Db::tx(function () use ($id, $data, $venueIds, $flagIds, $orders) {
+        return Db::tx(function () use ($id, $data, $venueIds, $flagIds, $orders, $allowOverlap) {
+            if (!$allowOverlap && !in_array($data['status'], Master::INACTIVE_STATUSES, true)) {
+                self::assertNoOverlap($id ?? 0, (string)$data['rsv_date'], (string)$data['start_time'], (string)$data['end_time'], $venueIds);
+            }
             $now = Clock::nowStr();
             $before = $id !== null ? self::find($id) : null;
             $cols = ['shop_id', 'rsv_date', 'start_time', 'end_time', 'adults', 'children', 'infants', 'customer_id', 'group_name', 'sign_name', 'show_on_signage', 'purpose_id', 'source_id', 'trigger_id', 'status', 'memo1', 'memo2'];
@@ -125,12 +128,53 @@ final class Reservations
 
     public static function setStatus(int $id, string $status): void
     {
-        $before = self::find($id);
-        if ($before === null || !isset(Master::STATUSES[$status]) || $before['status'] === $status) {
+        Db::tx(function () use ($id, $status) {
+            $before = self::find($id);
+            if ($before === null || !isset(Master::STATUSES[$status]) || $before['status'] === $status) {
+                return;
+            }
+            if (in_array($before['status'], Master::INACTIVE_STATUSES, true) && !in_array($status, Master::INACTIVE_STATUSES, true)) {
+                self::assertNoOverlap($id, (string)$before['rsv_date'], (string)$before['start_time'], (string)$before['end_time'], array_map(fn ($v) => (int)$v['id'], $before['venues']));
+            }
+            Db::exec('UPDATE reservations SET status = ?, updated_by = ?, updated_at = ? WHERE id = ?', [$status, Auth::id(), Clock::nowStr(), $id]);
+            History::add('reservation', $id, 'update', ['ステータス' => [Master::STATUSES[$before['status']] ?? $before['status'], Master::STATUSES[$status]]]);
+        });
+    }
+
+    /** @param array<int, int> $venueIds @return array<int, string> 重なる会場名（自分自身・キャンセル系は除く） */
+    public static function overlaps(int $selfId, string $date, string $start, string $end, array $venueIds): array
+    {
+        if ($venueIds === []) {
+            return [];
+        }
+        $names = [];
+        foreach (self::between($date, $date, false) as $r) {
+            if ((int)$r['id'] === $selfId || !($r['start_time'] < $end && $start < $r['end_time'])) {
+                continue;
+            }
+            foreach ($r['venues'] as $v) {
+                if (in_array((int)$v['id'], $venueIds, true)) {
+                    $names[] = $v['name'] . '（' . $r['start_time'] . '〜' . $r['end_time'] . '）';
+                }
+            }
+        }
+        return array_values(array_unique($names));
+    }
+
+    /** トランザクション内で呼ぶ。MySQL は会場行をロックして同時保存を直列化する */
+    private static function assertNoOverlap(int $selfId, string $date, string $start, string $end, array $venueIds): void
+    {
+        if ($venueIds === []) {
             return;
         }
-        Db::exec('UPDATE reservations SET status = ?, updated_by = ?, updated_at = ? WHERE id = ?', [$status, Auth::id(), Clock::nowStr(), $id]);
-        History::add('reservation', $id, 'update', ['ステータス' => [Master::STATUSES[$before['status']] ?? $before['status'], Master::STATUSES[$status]]]);
+        if (Db::driver() === 'mysql') {
+            $ids = array_values(array_unique(array_map('intval', $venueIds)));
+            Db::rows('SELECT id FROM venues WHERE id IN (' . implode(',', array_fill(0, count($ids), '?')) . ') FOR UPDATE', $ids);
+        }
+        $clash = self::overlaps($selfId, $date, $start, $end, $venueIds);
+        if ($clash !== []) {
+            throw new OverlapException($clash);
+        }
     }
 
     public static function delete(int $id): void

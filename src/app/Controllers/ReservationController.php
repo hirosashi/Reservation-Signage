@@ -13,6 +13,7 @@ use App\Core\View;
 use App\Services\Customers;
 use App\Services\History;
 use App\Services\Master;
+use App\Services\OverlapException;
 use App\Services\Reservations;
 use App\Services\Signage;
 
@@ -84,7 +85,11 @@ final class ReservationController
         }
         $newCustomer = [];
         foreach (['last_name', 'first_name', 'last_kana', 'first_kana', 'company', 'tel', 'email'] as $k) {
-            $newCustomer[$k] = mb_substr(App::param('nc_' . $k), 0, 200);
+            $newCustomer[$k] = App::param('nc_' . $k);
+            $max = ['company' => 200, 'tel' => 30, 'email' => 200][$k] ?? 50;
+            if (mb_strlen($newCustomer[$k]) > $max) {
+                $errors[] = '新規顧客の項目は' . $max . '文字以内で入力してください（' . $k . '）。';
+            }
         }
         $hasNewCustomer = $customerId === 0 && implode('', $newCustomer) !== '';
 
@@ -106,7 +111,7 @@ final class ReservationController
         ];
 
         if ($errors === [] && !in_array($status, Master::INACTIVE_STATUSES, true) && App::param('allow_overlap') !== '1') {
-            $clash = self::overlaps($id, (string)$date, (string)$start, (string)$end, $venueIds);
+            $clash = Reservations::overlaps($id, (string)$date, (string)$start, (string)$end, $venueIds);
             if ($clash !== []) {
                 $errors[] = '同じ時間帯に予約が入っている会場があります：' . implode('、', $clash) . '（重ねて保存する場合は「重複を許可」にチェック）';
             }
@@ -128,7 +133,22 @@ final class ReservationController
             History::add('customer', (int)$data['customer_id'], 'create', []);
         }
 
-        $savedId = Reservations::save($id > 0 ? $id : null, $data, $venueIds, $flagIds, $orders);
+        try {
+            $savedId = Reservations::save($id > 0 ? $id : null, $data, $venueIds, $flagIds, $orders, App::param('allow_overlap') === '1');
+        } catch (OverlapException $e) {
+            $post = $_POST;
+            if ($hasNewCustomer) {
+                $post['customer_id'] = (string)$data['customer_id'];
+                foreach (array_keys($post) as $k) {
+                    if (str_starts_with((string)$k, 'nc_')) {
+                        unset($post[$k]);
+                    }
+                }
+            }
+            Session::set('panel_old', ['post' => $post, 'errors' => ['同じ時間帯に予約が入っている会場があります：' . implode('、', $e->clashes) . '（重ねて保存する場合は「重複を許可」にチェック）']]);
+            $sep = str_contains($return, '?') ? '&' : '?';
+            App::redirect($return . $sep . ($id > 0 ? 'edit=' . $id : 'new=1'));
+        }
         $saved = Reservations::find($savedId);
         Session::flash('ok', '予約を保存しました（予約ID ' . ($saved['code'] ?? '') . '）。');
         App::redirect($return);
@@ -158,8 +178,12 @@ final class ReservationController
     {
         Auth::requireLogin();
         Csrf::verify();
-        Reservations::setStatus($id, App::param('status'));
-        Session::flash('ok', 'ステータスを変更しました。');
+        try {
+            Reservations::setStatus($id, App::param('status'));
+            Session::flash('ok', 'ステータスを変更しました。');
+        } catch (OverlapException $e) {
+            Session::flash('warn', '同じ時間帯に予約が入っている会場があるため戻せません：' . implode('、', $e->clashes) . '（重ねる場合は予約の編集で「重複を許可」にチェックして保存）');
+        }
         App::redirect(AuthController::safeReturn(App::param('return')));
     }
 
@@ -180,23 +204,4 @@ final class ReservationController
         return sprintf('%02d:%02d', (int)$m[1], (int)$m[2]);
     }
 
-    /** @param array<int, int> $venueIds @return array<int, string> 重なる会場名 */
-    private static function overlaps(int $selfId, string $date, string $start, string $end, array $venueIds): array
-    {
-        if ($venueIds === []) {
-            return [];
-        }
-        $names = [];
-        foreach (Reservations::between($date, $date, false) as $r) {
-            if ((int)$r['id'] === $selfId || !($r['start_time'] < $end && $start < $r['end_time'])) {
-                continue;
-            }
-            foreach ($r['venues'] as $v) {
-                if (in_array((int)$v['id'], $venueIds, true)) {
-                    $names[] = $v['name'] . '（' . $r['start_time'] . '〜' . $r['end_time'] . '）';
-                }
-            }
-        }
-        return array_values(array_unique($names));
-    }
 }

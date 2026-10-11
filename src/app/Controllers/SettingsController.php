@@ -118,7 +118,11 @@ final class SettingsController
                     $errors[] = $label . 'を選んでください。';
                 }
             } else {
-                $vals[$f] = $v === '' ? null : mb_substr($v, 0, 200);
+                $max = ['login_id' => 50, 'building' => 50, 'color' => 20][$f] ?? ($t === 'menu_items' && $f === 'name' ? 200 : 100);
+                if (mb_strlen($v) > $max) {
+                    $errors[] = $label . 'は' . $max . '文字以内で入力してください。';
+                }
+                $vals[$f] = $v === '' ? null : $v;
             }
         }
         if ($t === 'users') {

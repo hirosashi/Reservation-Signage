@@ -42,6 +42,9 @@ final class Report
                 $label = trim((string)$v['report_name']);
                 $labels[] = $label !== '' ? $label : (string)$v['name'];
             }
+            if ($labels === []) {
+                $labels[] = '会場未定';
+            }
             $entry = [
                 'mark' => '',
                 'name' => trim((string)$r['sign_name']) !== '' ? (string)$r['sign_name'] : Reservations::title($r),

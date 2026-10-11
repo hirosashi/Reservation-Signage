@@ -343,6 +343,8 @@
   async function fetchTableCheck(options = {}) {
     const query = new URLSearchParams({ t: String(Date.now()) });
     if (options.sync) query.set("sync", "1");
+    const feedDate = normalizeDateString(options.date || params.get("date"));
+    if (feedDate) query.set("date", feedDate);
     const response = await fetch(`${API_URL}?${query}`, { cache: "no-store" });
     const parsed = await readJsonResponse(response);
     state = {
