@@ -1,0 +1,8 @@
+src/config/config.php
+src/config/config.local.php
+src/storage/logs/*
+!src/storage/logs/.gitkeep
+src/storage/db/*
+!src/storage/db/.gitkeep
+*.log
+.DS_Store

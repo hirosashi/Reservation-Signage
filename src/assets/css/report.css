@@ -1,0 +1,12 @@
+*{box-sizing:border-box}body{margin:0;font:12px/1.4 "Hiragino Kaku Gothic ProN","Noto Sans JP",Meiryo,sans-serif;background:#eee}
+.toolbar{display:flex;gap:12px;align-items:center;padding:10px 16px;background:#1d2733;color:#fff}.toolbar a{color:#fff}.toolbar form{margin:0}
+.toolbar button,.toolbar .btn{padding:5px 12px;border:1px solid #ccc;border-radius:4px;background:#fff;color:#222;cursor:pointer;text-decoration:none;font:inherit}
+.sheet{background:#fff;margin:16px;padding:12px}
+.sheet-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}.sheet-head h1{font-size:18px;margin:0}
+.report-matrix{width:100%;border-collapse:collapse;table-layout:fixed}
+.report-matrix th,.report-matrix td{border:1px solid #333;padding:2px 3px;vertical-align:top;word-break:break-all}
+.report-matrix th{background:#f0f0f0;font-weight:700;text-align:center}.period-heading{font-size:13px}
+.venue-cell{font-weight:700;white-space:nowrap}.report-entry+.report-entry{border-top:1px dotted #999;margin-top:2px;padding-top:2px}
+.pax-cell,.time-cell{text-align:center}
+@page{size:A3 landscape;margin:8mm}
+@media print{body{background:#fff}.no-print{display:none}.sheet{margin:0;padding:0}.report-matrix{font-size:9px}}

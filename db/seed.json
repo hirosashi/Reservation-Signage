@@ -1,0 +1,334 @@
+{
+ "shops": [
+  {
+   "name": "宴会場",
+   "slug": "newitaya-banquet",
+   "venues": [
+    {
+     "name": "末広",
+     "building": "本館3F",
+     "report_name": "末広"
+    },
+    {
+     "name": "松風",
+     "building": "本館2F",
+     "report_name": "松風"
+    },
+    {
+     "name": "夕霧",
+     "building": "本館2F",
+     "report_name": "夕霧"
+    },
+    {
+     "name": "信夫",
+     "building": "本館2F",
+     "report_name": "信夫"
+    },
+    {
+     "name": "入舟",
+     "building": "本館2F",
+     "report_name": "入舟"
+    },
+    {
+     "name": "千鳥",
+     "building": "本館2F",
+     "report_name": "千鳥"
+    },
+    {
+     "name": "逢初",
+     "building": "本館2F",
+     "report_name": "逢初"
+    },
+    {
+     "name": "有明",
+     "report_name": "有明"
+    },
+    {
+     "name": "千成",
+     "report_name": "千成"
+    },
+    {
+     "name": "蓬莱・西",
+     "building": "南館3F",
+     "report_name": "蓬莱(西)"
+    },
+    {
+     "name": "蓬莱・東",
+     "building": "南館3F",
+     "report_name": "蓬莱(東)"
+    },
+    {
+     "name": "天平・西",
+     "building": "本館3F",
+     "report_name": "天平(西)"
+    },
+    {
+     "name": "天平・東",
+     "building": "本館3F",
+     "report_name": "天平(東)"
+    },
+    {
+     "name": "桜・西",
+     "building": "南館4F",
+     "report_name": "桜(西)"
+    },
+    {
+     "name": "桜・東",
+     "building": "南館4F",
+     "report_name": "桜(東)"
+    },
+    {
+     "name": "菊・北",
+     "building": "南館B1F",
+     "report_name": "菊(北)"
+    },
+    {
+     "name": "菊・南",
+     "building": "南館B1F",
+     "report_name": "菊(南)"
+    },
+    {
+     "name": "藤・北",
+     "building": "南館B1F",
+     "report_name": "藤(北)"
+    },
+    {
+     "name": "藤・南",
+     "building": "南館B1F",
+     "report_name": "藤(南)"
+    },
+    {
+     "name": "ローズ",
+     "building": "南館B1F",
+     "report_name": "ローズ"
+    },
+    {
+     "name": "楓の間",
+     "building": "本館B1F",
+     "report_name": "楓"
+    },
+    {
+     "name": "寿の間",
+     "building": "本館B1F",
+     "report_name": "寿"
+    },
+    {
+     "name": "葵の間",
+     "building": "本館B1F",
+     "report_name": "葵"
+    },
+    {
+     "name": "テイクアウト",
+     "report_name": "テイクアウト"
+    },
+    {
+     "name": "コンパート",
+     "building": "本館8F",
+     "report_name": "コンパート"
+    },
+    {
+     "name": "ロビー",
+     "building": "本館1F"
+    }
+   ]
+  },
+  {
+   "name": "フレンチ オーロラ",
+   "slug": "newitaya-french",
+   "venues": [
+    {
+     "name": "オーロラ",
+     "building": "本館8F",
+     "report_name": "オーロラ"
+    }
+   ]
+  },
+  {
+   "name": "板屋飯店",
+   "slug": "newitaya-china",
+   "venues": [
+    {
+     "name": "飯店",
+     "building": "南館2F",
+     "report_name": "飯店"
+    },
+    {
+     "name": "飯店(A)",
+     "building": "南館2F",
+     "report_name": "飯店(A)"
+    },
+    {
+     "name": "飯店(B)",
+     "building": "南館2F",
+     "report_name": "飯店(B)"
+    }
+   ]
+  },
+  {
+   "name": "バー",
+   "slug": "",
+   "venues": [
+    {
+     "name": "バー",
+     "building": "南館1F",
+     "report_name": "バー"
+    }
+   ]
+  },
+  {
+   "name": "チェスナット",
+   "slug": "newitaya-chestnut",
+   "venues": [
+    {
+     "name": "チェスナット",
+     "building": "南館1F",
+     "report_name": "チェスナット"
+    },
+    {
+     "name": "チェス2",
+     "building": "南館1F",
+     "report_name": "チェス2"
+    },
+    {
+     "name": "チェス3",
+     "building": "南館1F",
+     "report_name": "チェス3"
+    }
+   ]
+  },
+  {
+   "name": "マーブル",
+   "slug": "newitaya-marble",
+   "venues": [
+    {
+     "name": "マーブル",
+     "building": "本館1F",
+     "report_name": "マーブル"
+    }
+   ]
+  },
+  {
+   "name": "但馬",
+   "slug": "newitaya-tajima",
+   "venues": [
+    {
+     "name": "但馬"
+    }
+   ]
+  },
+  {
+   "name": "車両・駐車場",
+   "slug": "",
+   "venues": [
+    {
+     "name": "マイクロ1",
+     "building": "車両",
+     "report_name": "マイクロ1"
+    },
+    {
+     "name": "マイクロ2",
+     "building": "車両",
+     "report_name": "マイクロ2"
+    },
+    {
+     "name": "P大型1",
+     "building": "駐車場",
+     "report_name": "P大型1"
+    },
+    {
+     "name": "P大型2",
+     "building": "駐車場",
+     "report_name": "P大型2"
+    },
+    {
+     "name": "アルファード",
+     "building": "車両",
+     "report_name": "アルファード"
+    }
+   ]
+  }
+ ],
+ "flags": [
+  {
+   "name": "料理未",
+   "color": "#e53935"
+  },
+  {
+   "name": "料理確",
+   "color": "#43a047"
+  },
+  {
+   "name": "飲料未",
+   "color": "#e53935"
+  },
+  {
+   "name": "飲料確",
+   "color": "#43a047"
+  },
+  {
+   "name": "会場未",
+   "color": "#e53935"
+  },
+  {
+   "name": "会場確",
+   "color": "#43a047"
+  },
+  {
+   "name": "看板未",
+   "color": "#e53935"
+  },
+  {
+   "name": "看板確",
+   "color": "#43a047"
+  },
+  {
+   "name": "音響未",
+   "color": "#e53935"
+  },
+  {
+   "name": "音響確",
+   "color": "#43a047"
+  },
+  {
+   "name": "花未",
+   "color": "#e53935"
+  },
+  {
+   "name": "花確",
+   "color": "#43a047"
+  },
+  {
+   "name": "写真未",
+   "color": "#e53935"
+  },
+  {
+   "name": "写真確",
+   "color": "#43a047"
+  },
+  {
+   "name": "現金",
+   "color": "#1e88e5"
+  },
+  {
+   "name": "カード",
+   "color": "#1e88e5"
+  },
+  {
+   "name": "振込",
+   "color": "#1e88e5"
+  },
+  {
+   "name": "請求書",
+   "color": "#1e88e5"
+  },
+  {
+   "name": "前受金",
+   "color": "#1e88e5"
+  },
+  {
+   "name": "サイネージ非表示",
+   "color": "#757575",
+   "hide_on_signage": 1
+  }
+ ]
+}
