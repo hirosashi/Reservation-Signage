@@ -10,7 +10,8 @@ REMOTE=www/reservation-signage
 STAMP=$(date +%Y%m%d_%H%M%S)
 
 echo "== backup"
-"${SSH[@]}" "if [ -d ~/$REMOTE ]; then mkdir -p ~/backups && tar czf ~/backups/reservation-signage_$STAMP.tar.gz -C ~/www reservation-signage && ls -la ~/backups/reservation-signage_$STAMP.tar.gz; else echo '初回設置のためバックアップなし'; fi"
+# リモートのログインシェルが csh のため sh で実行する
+"${SSH[@]}" "sh -c 'if [ -d \$HOME/$REMOTE ]; then mkdir -p \$HOME/backups && tar czf \$HOME/backups/reservation-signage_$STAMP.tar.gz -C \$HOME/www reservation-signage && ls -la \$HOME/backups/reservation-signage_$STAMP.tar.gz; else echo 初回設置のためバックアップなし; fi'"
 
 echo "== upload src"
 tar czf - -C src --exclude=config/config.php --exclude=config/config.local.php \
