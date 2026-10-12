@@ -25,7 +25,7 @@
 - データ: `GET /api/signage/events?date=YYYY-MM-DD&days=N` — 旧 `tablecheck-sync.php` と同じ JSON 形式
   (`events[]` の `time / endTime / venue / location / name / pax / status / flags` など)
 - 表示条件: 「サイネージに表示する」がオン、会場あり、ステータスが仮予約・キャンセル・無断キャンセル以外、
-  「サイネージ非表示」設定のフラグなし。表示名は看板名 → グループ名 → 顧客名。
+  「サイネージ非表示」設定のフラグなし。表示名は看板名 → グループ名（顧客名は公開しない）。
 
 ## ローカル起動
 ```
@@ -34,6 +34,12 @@ php tools/install.php src '<admin初期パスワード8文字以上>'
 php -S 127.0.0.1:8090 -t src tools/dev-router.php
 ```
 初期データ（店舗・会場・フラグ）は `db/seed.json`。テーブルが空のときだけ投入される。
+
+## MySQL への切り替え（SQLite からの移行）
+サーバの `config/config.php` の `db` を mysql に書き換えてから、データを移す（ID はそのまま。移行先が空のときだけ実行される）。
+```
+php ~/reservation-signage_tools/tools/migrate-sqlite-to-mysql.php ~/www/reservation-signage <SQLiteファイル>
+```
 
 ## 準備サイトへの反映
 `./deploy.sh`（サーバをバックアップ → `src/` を転送。サーバの `config/config.php` と `storage/` は上書きしない）
