@@ -62,7 +62,10 @@ $panelUrl = App::url($path) . '?' . http_build_query($q + ['new' => '1']);
       <a class="<?= $on ? 'on' : '' ?>" href="<?= App::url($href) ?>?date=<?= View::e($date) ?>"><?= View::e($label) ?></a>
     <?php endforeach; ?>
     <a href="<?= App::url('/report') ?>?date=<?= View::e($date) ?>" target="_blank" rel="noopener">帳票出力</a>
-    <?php if (Auth::isAdmin()): ?><a class="<?= str_starts_with($path, '/settings') ? 'on' : '' ?>" href="<?= App::url('/settings') ?>">設定</a><?php endif; ?>
+    <?php if (Auth::isAdmin()): $usersOn = str_starts_with($path, '/settings') && ($_GET['t'] ?? '') === 'users'; ?>
+      <a class="<?= $usersOn ? 'on' : '' ?>" href="<?= App::url('/settings') ?>?t=users">ユーザー管理</a>
+      <a class="<?= str_starts_with($path, '/settings') && !$usersOn ? 'on' : '' ?>" href="<?= App::url('/settings') ?>">設定</a>
+    <?php endif; ?>
   </nav>
   <main class="main">
     <?php foreach ($flash as $f): ?><div class="flash flash-<?= View::e($f['kind']) ?>"><?= View::e($f['message']) ?></div><?php endforeach; ?>

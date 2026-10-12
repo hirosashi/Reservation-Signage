@@ -43,7 +43,7 @@ final class SettingsController
             'menu_items' => ['label' => 'メニュー', 'table' => 'menu_items', 'order' => 'category_id, sort_no, id', 'fields' => [
                 'category_id' => ['カテゴリ', 'select', true, $cats], 'name' => ['メニュー名', 'text', true], 'price' => ['税込単価（円）', 'int'], 'sort_no' => ['並び順', 'int'], 'is_active' => ['使用中', 'bool'],
             ]],
-            'users' => ['label' => '利用者', 'table' => 'users', 'order' => 'id', 'fields' => [
+            'users' => ['label' => 'ユーザー管理', 'table' => 'users', 'order' => 'id', 'fields' => [
                 'login_id' => ['ログインID', 'text', true], 'name' => ['氏名', 'text', true], 'role' => ['権限', 'select', true, ['staff' => 'スタッフ', 'admin' => '管理者']],
                 'password' => ['パスワード（新規は必須・変更時のみ入力）', 'password'], 'is_active' => ['使用中', 'bool'],
             ]],

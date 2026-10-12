@@ -1,4 +1,16 @@
 Options -Indexes
+
+# ベーシック認証（サイネージ管理サイトと同じ ID・パスワード）。サイネージ表示とそのデータ取得は認証なし
+SetEnvIf Request_URI "/(signage/|api/signage/events)" PUBLIC_SIGNAGE
+AuthType Basic
+AuthName "Itaya Signage Admin"
+AuthUserFile /home/jyunbi/www/newitaya.com/.htpasswd-newitaya
+<RequireAny>
+  Require env PUBLIC_SIGNAGE
+  Require env REDIRECT_PUBLIC_SIGNAGE
+  Require valid-user
+</RequireAny>
+
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} -f [OR]
 RewriteCond %{REQUEST_FILENAME} -d
